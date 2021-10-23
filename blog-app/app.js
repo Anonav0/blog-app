@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 //MONGOOSE/MODEL CONFIG
 const blogSchema = new mongoose.Schema({
-    tittle: String,
+    title: String,
     image: {type: String, default : "placeholder.jpg"},
     body: String,
     created: {type: Date, default: Date.now}
@@ -21,6 +21,8 @@ const Blog = mongoose.model("Blog", blogSchema);
 
 //RESTFUL ROUTES
 
+
+//INDEX ROUTE
 app.get("/", (req, res)=> {
     res.redirect("/blogs");
 });
@@ -33,7 +35,23 @@ app.get("/blogs", (req, res) => {
             res.render("index", {blogs: blogs})
         }
     })
-})  
+});
+
+//NEW ROUTE
+app.get("/blogs/new", (req,res)=> {
+    res.render("new");
+});
+
+app.post("/blogs", (req, res) => {
+    //create blog
+    Blog.create(req.body.blog, (err,newBlog) => {
+        if(err) {
+            res.render("new");
+        } else {
+            res.redirect("/blogs");
+        }
+    })
+})
 
 
 app.listen(port, () => {
